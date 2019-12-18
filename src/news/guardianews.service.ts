@@ -14,7 +14,7 @@ export class GuardiaNewsService {
 
   transform(news: GuardianNews): MyNews {
     const newArt = {
-      webPublicationDate: news.webPublicationDate,
+      webPublicationDate: new Date(news.webPublicationDate),
       webTitle: news.webTitle,
       webUrl: news.webUrl,
       author: news.fields.byline,
@@ -22,12 +22,12 @@ export class GuardiaNewsService {
     return newArt;
   }
 
-  search(searchedWord: string): Observable<MyNews[]> {
+  search(searchedWord: string, page = '1'): Observable<MyNews[]> {
     const key = this.configService.get<string>('GUARDIAN_KEY');
     const baseUrl = this.configService.get<string>('GUARDIAN_URL_BASE');
     const filters = this.configService.get<string>('GUARDIAN_URL_FILTERS');
     return this.http
-      .get(`${baseUrl}api-key=${key}&q=${searchedWord}${filters}`)
+      .get(`${baseUrl}api-key=${key}&q=${searchedWord}${filters}&page=${page}`)
       .pipe(
         map(response => response.data.response.results.map(this.transform)),
       );

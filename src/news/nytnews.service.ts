@@ -14,7 +14,7 @@ export class NYTNewsService {
 
   transform(news: NYTNews): MyNews {
     const newArt = {
-      webPublicationDate: news.pub_date,
+      webPublicationDate: new Date(news.pub_date),
       webTitle: news.headline.main,
       webUrl: news.web_url,
       author: news.byline.original,
@@ -22,12 +22,12 @@ export class NYTNewsService {
     return newArt;
   }
 
-  search(searchedWord: string): Observable<MyNews[]> {
+  search(searchedWord: string, page = '1'): Observable<MyNews[]> {
     const key = this.configService.get<string>('NYT_KEY');
     const baseUrl = this.configService.get<string>('NYT_URL_BASE');
     const filters = this.configService.get<string>('NYT_URL_FILTERS');
     return this.http
-      .get(`${baseUrl}q=${searchedWord}${filters}&api-key=${key}`)
+      .get(`${baseUrl}q=${searchedWord}${filters}&api-key=${key}&page=${page}`)
       .pipe(map(response => response.data.response.docs.map(this.transform)));
   }
 }

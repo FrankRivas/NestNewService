@@ -19,7 +19,7 @@ export interface NYTNews {
 }
 
 export interface MyNews {
-  webPublicationDate: string;
+  webPublicationDate: Date;
   webTitle: string;
   webUrl: string;
   author: string;
