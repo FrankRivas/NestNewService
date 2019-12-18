@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { HttpService } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { GuardianNews, MyNews } from './interfaces/news';
 import { ConfigService } from '@nestjs/config';
+import { codes } from './utils/helpers';
 
 @Injectable()
 export class GuardiaNewsService {
@@ -30,6 +31,11 @@ export class GuardiaNewsService {
       .get(`${baseUrl}api-key=${key}&q=${searchedWord}${filters}&page=${page}`)
       .pipe(
         map(response => response.data.response.results.map(this.transform)),
+        catchError(err => {
+          return throwError(
+            new HttpException(codes[err.response.status], err.response.status),
+          );
+        }),
       );
   }
 }
