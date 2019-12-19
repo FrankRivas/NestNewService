@@ -24,11 +24,9 @@ export class NewsController {
       case 'nyt':
         searchNYT = this.nytnewsService.search(searchedWord, page);
         return searchNYT;
-        break;
       case 'guardian':
         searchGuardian = this.newsService.search(searchedWord, page);
         return searchGuardian;
-        break;
       default:
         searchGuardian = this.newsService.search(searchedWord, page);
         searchNYT = this.nytnewsService.search(searchedWord, page);

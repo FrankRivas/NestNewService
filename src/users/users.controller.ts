@@ -13,7 +13,7 @@ export class UsersController {
     res.send(token);
   }
   @Get()
-  getUser() {
-    console.log('USER MAMALON');
+  getUser(): void {
+    console.log('This is a test Route');
   }
 }

@@ -32,9 +32,16 @@ export class NYTNewsService {
       .pipe(
         map(response => response.data.response.docs.map(this.transform)),
         catchError(err => {
-          return throwError(
-            new HttpException(codes[err.response.status], err.response.status),
-          );
+          if (err.response) {
+            return throwError(
+              new HttpException(
+                codes[err.response.status],
+                err.response.status,
+              ),
+            );
+          } else {
+            throw err;
+          }
         }),
       );
   }
