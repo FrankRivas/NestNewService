@@ -8,8 +8,11 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
   @Post()
   @UsePipes(ValidationUserPipe)
-  login(@Body() user: UserDto): string {
-    return this.userService.login(user);
+  login(@Body() user: UserDto): {} {
+    const accessToken = this.userService.login(user);
+    return {
+      accessToken: accessToken,
+    };
   }
   @Get()
   getUser(): void {
