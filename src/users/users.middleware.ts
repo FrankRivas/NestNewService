@@ -1,4 +1,8 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { generateMessage, codes } from '../utils/helpers';
 import * as jwt from 'jsonwebtoken';
@@ -10,22 +14,24 @@ export class UsersMiddleware implements NestMiddleware {
   constructor(private readonly configService: ConfigService) {}
   use(req: Request, res: Response, next: Function): void {
     const secretKey = this.configService.get<Secret>('SECRET_CODE_JWT');
-    if (req.query.searcher.includes('guardian')) {
+    if (req.query.searcher === 'guardian' || !req.query.searcher) {
       const bearerHeader = req.headers['authorization'];
-      if (typeof bearerHeader !== 'undefined') {
+      if (bearerHeader) {
         const bearer = bearerHeader.split(' ');
         const bearerToken = bearer[1];
         jwt.verify(bearerToken, secretKey ? secretKey : 'secretKey', err => {
           if (err) {
-            const msg = generateMessage(codes.FORBIDDEN);
-            res.status(codes.FORBIDDEN).send(msg);
+            // if token is invalid
+            const msg = generateMessage(codes.UNAUTHORIZED);
+            throw new UnauthorizedException(msg);
           } else {
             next();
           }
         });
       } else {
-        const msg = generateMessage(codes.FORBIDDEN);
-        res.status(codes.FORBIDDEN).send(msg);
+        // if token is missing
+        const msg = generateMessage(codes.UNAUTHORIZED);
+        throw new UnauthorizedException(msg);
       }
     } else {
       next();
