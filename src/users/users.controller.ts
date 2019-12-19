@@ -9,7 +9,6 @@ export class UsersController {
   @Post()
   login(@Body() user: User, @Res() res: Response): void {
     const token = this.userService.login(user, res);
-    console.log('regres');
     res.send(token);
   }
   @Get()
