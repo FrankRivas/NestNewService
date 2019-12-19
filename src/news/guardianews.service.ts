@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { GuardianNews, MyNews } from './interfaces/news';
 import { ConfigService } from '@nestjs/config';
-import { codes } from './utils/helpers';
+import { codes } from '../utils/helpers';
 
 @Injectable()
 export class GuardiaNewsService {
@@ -14,11 +14,15 @@ export class GuardiaNewsService {
   ) {}
 
   transform(news: GuardianNews): MyNews {
+    let author = '';
+    if (news.fields) {
+      author = news.fields.byline;
+    }
     const newArt = {
       webPublicationDate: new Date(news.webPublicationDate),
       webTitle: news.webTitle,
       webUrl: news.webUrl,
-      author: news.fields.byline,
+      author: author,
     };
     return newArt;
   }
@@ -32,9 +36,16 @@ export class GuardiaNewsService {
       .pipe(
         map(response => response.data.response.results.map(this.transform)),
         catchError(err => {
-          return throwError(
-            new HttpException(codes[err.response.status], err.response.status),
-          );
+          if (err.response) {
+            return throwError(
+              new HttpException(
+                codes[err.response.status],
+                err.response.status,
+              ),
+            );
+          } else {
+            throw err;
+          }
         }),
       );
   }

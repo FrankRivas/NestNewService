@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, NotFoundException } from '@nestjs/common';
 import { GuardiaNewsService } from './guardianews.service';
 import { NYTNewsService } from './nytnews.service';
 import { Observable, merge } from 'rxjs';
@@ -19,27 +19,28 @@ export class NewsController {
   ): Observable<MyNews[]> {
     let searchGuardian;
     let searchNYT;
-
-    switch (searcher) {
-      case 'nyt':
-        searchNYT = this.nytnewsService.search(searchedWord, page);
-        return searchNYT;
-        break;
-      case 'guardian':
-        searchGuardian = this.newsService.search(searchedWord, page);
-        return searchGuardian;
-        break;
-      default:
-        searchGuardian = this.newsService.search(searchedWord, page);
-        searchNYT = this.nytnewsService.search(searchedWord, page);
-        const mergedNews = merge(searchNYT, searchGuardian).pipe(
-          reduce((acum, val) =>
-            [...acum, ...val].sort(function(a, b) {
-              return a.webPublicationDate > b.webPublicationDate ? -1 : 1;
-            }),
-          ),
-        );
-        return mergedNews;
+    if (searcher) {
+      switch (searcher) {
+        case 'nyt':
+          searchNYT = this.nytnewsService.search(searchedWord, page);
+          return searchNYT;
+        case 'guardian':
+          searchGuardian = this.newsService.search(searchedWord, page);
+          return searchGuardian;
+        default:
+          throw new NotFoundException('Invalid url');
+      }
+    } else {
+      searchGuardian = this.newsService.search(searchedWord, page);
+      searchNYT = this.nytnewsService.search(searchedWord, page);
+      const mergedNews = merge(searchNYT, searchGuardian).pipe(
+        reduce((acum, val) =>
+          [...acum, ...val].sort(function(a, b) {
+            return a.webPublicationDate > b.webPublicationDate ? -1 : 1;
+          }),
+        ),
+      );
+      return mergedNews;
     }
   }
 }

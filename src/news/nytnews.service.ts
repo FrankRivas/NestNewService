@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { MyNews, NYTNews } from './interfaces/news';
 import { ConfigService } from '@nestjs/config';
-import { codes } from './utils/helpers';
+import { codes } from '../utils/helpers';
 
 @Injectable()
 export class NYTNewsService {
@@ -32,9 +32,16 @@ export class NYTNewsService {
       .pipe(
         map(response => response.data.response.docs.map(this.transform)),
         catchError(err => {
-          return throwError(
-            new HttpException(codes[err.response.status], err.response.status),
-          );
+          if (err.response) {
+            return throwError(
+              new HttpException(
+                codes[err.response.status],
+                err.response.status,
+              ),
+            );
+          } else {
+            throw err;
+          }
         }),
       );
   }
