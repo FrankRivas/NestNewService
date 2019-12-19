@@ -1,6 +1,10 @@
-import { ErrorMessage } from '../interfaces/errors';
+interface ErrorMessage {
+  statusCode: number;
+  error: string;
+  message: string;
+}
 
-enum codes {
+export enum codes {
   'OK' = 200,
   'CREATED' = 201,
   'NO CONTENT' = 204,
@@ -14,10 +18,10 @@ enum codes {
   'SERVIDE UNAVAILABLE' = 503,
 }
 
-export function generateMessage(code: number, error?: {}): ErrorMessage {
+export function generateMessage(code: number, message = ''): ErrorMessage {
   return {
-    code: code,
-    msg: codes[code],
-    errors: error || {},
+    statusCode: code,
+    error: codes[code],
+    message: message,
   };
 }
