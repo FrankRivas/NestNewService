@@ -4,7 +4,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { generateMessage, codes } from '../utils/helpers';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { Secret } from 'jsonwebtoken';
@@ -22,16 +21,14 @@ export class UsersMiddleware implements NestMiddleware {
         jwt.verify(bearerToken, secretKey ? secretKey : 'secretKey', err => {
           if (err) {
             // if token is invalid
-            const msg = generateMessage(codes.UNAUTHORIZED);
-            throw new UnauthorizedException(msg);
+            throw new UnauthorizedException('Invalid token');
           } else {
             next();
           }
         });
       } else {
         // if token is missing
-        const msg = generateMessage(codes.UNAUTHORIZED);
-        throw new UnauthorizedException(msg);
+        throw new UnauthorizedException('Token is required');
       }
     } else {
       next();

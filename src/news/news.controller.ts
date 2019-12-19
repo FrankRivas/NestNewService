@@ -4,7 +4,6 @@ import { NYTNewsService } from './nytnews.service';
 import { Observable, merge } from 'rxjs';
 import { MyNews } from './interfaces/news';
 import { reduce } from 'rxjs/operators';
-import { generateMessage, codes } from 'src/utils/helpers';
 
 @Controller('news')
 export class NewsController {
@@ -29,8 +28,7 @@ export class NewsController {
           searchGuardian = this.newsService.search(searchedWord, page);
           return searchGuardian;
         default:
-          const msg = generateMessage(codes['NOT FOUND']);
-          throw new NotFoundException(msg);
+          throw new NotFoundException('Invalid url');
       }
     } else {
       searchGuardian = this.newsService.search(searchedWord, page);

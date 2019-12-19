@@ -1,12 +1,7 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from './interfaces/users';
 import * as jwt from 'jsonwebtoken';
 import { RegistredUsers } from './collections/users';
-import { generateMessage, codes } from 'src/utils/helpers';
 import { ConfigService } from '@nestjs/config';
 import { Secret } from 'jsonwebtoken';
 
@@ -24,13 +19,11 @@ export class UsersService {
         return token;
       } else {
         // If invalid password
-        const msg = generateMessage(codes.UNAUTHORIZED);
-        throw new UnauthorizedException(msg);
+        throw new UnauthorizedException('Invalid password');
       }
     } else {
       // If user does not exist
-      const msg = generateMessage(codes['BAD REQUEST']);
-      throw new BadRequestException(msg);
+      throw new UnauthorizedException('Invalid user');
     }
   }
 }
