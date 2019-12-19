@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { MyNews, NYTNews } from './interfaces/news';
 import { ConfigService } from '@nestjs/config';
-import { codes } from './utils/helpers';
+import { codes } from '../utils/helpers';
 
 @Injectable()
 export class NYTNewsService {

@@ -1,4 +1,7 @@
-import { ErrorMessage } from '../interfaces/errors';
+interface ErrorMessage {
+  statusCode: number;
+  message: string;
+}
 
 export enum codes {
   'OK' = 200,
