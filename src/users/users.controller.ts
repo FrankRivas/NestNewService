@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UsePipes } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/users.dto';
 import { ValidationUserPipe } from './users.pipe';
@@ -11,11 +11,7 @@ export class UsersController {
   login(@Body() user: UserDto): {} {
     const accessToken = this.userService.login(user);
     return {
-      accessToken: accessToken,
+      accessToken,
     };
-  }
-  @Get()
-  getUser(): void {
-    console.log('This is a test Route');
   }
 }

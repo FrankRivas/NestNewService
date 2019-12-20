@@ -14,7 +14,7 @@ export class UsersService {
     if (userDB) {
       if (userDB.password === user.password) {
         const token = jwt.sign(user, secretKey ? secretKey : 'secretKey', {
-          expiresIn: '1m',
+          expiresIn: '1h',
         });
         return token;
       } else {

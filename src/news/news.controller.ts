@@ -1,11 +1,19 @@
-import { Controller, Get, Query, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
 import { GuardiaNewsService } from './guardianews.service';
 import { NYTNewsService } from './nytnews.service';
-import { Observable, merge } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MyNews } from './interfaces/news';
-import { reduce } from 'rxjs/operators';
+import { AuthGuard } from 'src/users/users.guard';
+import { mergeNews } from '../utils/helpers';
 
 @Controller('news')
+@UseGuards(AuthGuard)
 export class NewsController {
   constructor(
     private readonly newsService: GuardiaNewsService,
@@ -33,14 +41,7 @@ export class NewsController {
     } else {
       searchGuardian = this.newsService.search(searchedWord, page);
       searchNYT = this.nytnewsService.search(searchedWord, page);
-      const mergedNews = merge(searchNYT, searchGuardian).pipe(
-        reduce((acum, val) =>
-          [...acum, ...val].sort(function(a, b) {
-            return a.webPublicationDate > b.webPublicationDate ? -1 : 1;
-          }),
-        ),
-      );
-      return mergedNews;
+      return mergeNews(searchNYT, searchGuardian);
     }
   }
 }

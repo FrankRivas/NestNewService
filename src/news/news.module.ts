@@ -4,7 +4,6 @@ import { GuardiaNewsService } from './guardianews.service';
 import { ConfigModule } from '@nestjs/config';
 import { NYTNewsService } from './nytnews.service';
 import { NewsMiddleware } from './news.middleware';
-import { UsersMiddleware } from 'src/users/users.middleware';
 
 @Module({
   imports: [ConfigModule, HttpModule],
@@ -13,6 +12,6 @@ import { UsersMiddleware } from 'src/users/users.middleware';
 })
 export class NewsModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(UsersMiddleware, NewsMiddleware).forRoutes('news');
+    consumer.apply(NewsMiddleware).forRoutes('news');
   }
 }
