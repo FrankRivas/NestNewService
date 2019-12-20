@@ -18,14 +18,14 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const secretKey = this.configService.get<Secret>('SECRET_CODE_JWT');
     if (request.query.searcher === 'guardian' || !request.query.searcher) {
-      const bearerHeader = request.headers['authorization'];
+      const bearerHeader = request.headers.authorization;
       if (bearerHeader) {
         const token = bearerHeader.split(' ')[1];
-        //const bearerToken = bearer[1];
         try {
           jwt.verify(token, secretKey ? secretKey : 'secretKey');
           return true;
         } catch {
+          // if token is invalid
           throw new UnauthorizedException('Invalid token');
         }
       } else {

@@ -11,10 +11,10 @@ import { Secret } from 'jsonwebtoken';
 @Injectable()
 export class UsersMiddleware implements NestMiddleware {
   constructor(private readonly configService: ConfigService) {}
-  use(req: Request, res: Response, next: Function): void {
+  use(req: Request, res: Response, next: () => void): void {
     const secretKey = this.configService.get<Secret>('SECRET_CODE_JWT');
     if (req.query.searcher === 'guardian' || !req.query.searcher) {
-      const bearerHeader = req.headers['authorization'];
+      const bearerHeader = req.headers.authorization;
       if (bearerHeader) {
         const bearer = bearerHeader.split(' ');
         const bearerToken = bearer[1];

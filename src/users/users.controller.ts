@@ -11,7 +11,7 @@ export class UsersController {
   login(@Body() user: UserDto): {} {
     const accessToken = this.userService.login(user);
     return {
-      accessToken: accessToken,
+      accessToken,
     };
   }
 }
