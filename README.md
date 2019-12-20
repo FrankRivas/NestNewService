@@ -77,6 +77,10 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Getting token
+
+In order to access the token generation functionality for querying the api of the guardian news, a file with valid users has been incorporated, which can be consulted in the path src / users / collections
+
 ## Documentation
 
 https://documenter.getpostman.com/view/3221284/SWEDza5c
