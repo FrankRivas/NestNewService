@@ -22,7 +22,7 @@ export class GuardiaNewsService {
       webPublicationDate: new Date(news.webPublicationDate),
       webTitle: news.webTitle,
       webUrl: news.webUrl,
-      author: author,
+      author,
     };
     return newArt;
   }
