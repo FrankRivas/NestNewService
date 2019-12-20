@@ -34,13 +34,17 @@ $ npm install
 #### #New York Time Variables
 
 NYT_URL_BASE=https://api.nytimes.com/svc/search/v2/articlesearch.json?
+
 NYT_URL_FILTERS=&sort=newest&fl=\_id, pub_date, snippet, web_url, byline, headline
+
 NYT_KEY=[Your secret nyt key API]
 
 #### #Guardian Variables
 
 GUARDIAN_URL_BASE=https://content.guardianapis.com/search?
+
 GUARDIAN_URL_FILTERS=&order-by=newest&show-fields=byline&show-tags=contributors
+
 GUARDIAN_KEY=[Your secret guardian key API]
 
 #### #JWT Secret
