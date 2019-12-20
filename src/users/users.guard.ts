@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
         }
       } else {
         // if token is missing
-        throw new UnauthorizedException('Token is required from guard');
+        throw new UnauthorizedException('Token is required');
       }
     } else {
       return true;
